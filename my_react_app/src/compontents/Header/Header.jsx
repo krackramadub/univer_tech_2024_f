@@ -4,10 +4,13 @@ import { Link, useNavigate} from 'react-router-dom'
 
 export const Header = () => {
 
+
+
   const navigate = useNavigate()
   // const store = useContext(MyStore)
 
   // console.log('store', 'ok')
+
 
   const id = 'testID'
   const uuid = 'testUUID'
@@ -22,6 +25,8 @@ export const Header = () => {
         <div><Link to={`/${id}/${uuid}`}>Главная </Link></div>
         <div onClick={() => navigate('/info', { state: { tel: '8800-35-35'} } )}>Инфо</div>
         <div onClick={() => handleNavigate()}>Пользователь</div>
+      </div>
+      <div>
       </div>
     </div>
   )

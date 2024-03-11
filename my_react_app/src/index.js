@@ -4,9 +4,12 @@ import './index.css';
 import App from './App';
 import { MyStore } from './store/Context';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux'
+import { store } from './store/store';
 // import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 
 
 const customStoreValue = {
@@ -15,9 +18,11 @@ const customStoreValue = {
   email: '1@mail.ru'
 }
 root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
 );
 {/* // <MyStore.Provider value={customStoreValue}> */ }
 {/* // </MyStore.Provider> */ }

@@ -2,25 +2,27 @@ import logo from './logo.svg';
 import './App.css';
 import { PageLayout } from './compontents/Layout/Layout';
 import { useEffect, useState } from 'react';
-
 import { Routes, Route, useParams, useLocation } from 'react-router-dom'
+import { useLazyGetPostsQuery } from './services/postService/postService';
+
+// import { useSelector } from 'react-redux'
 
 function App() {
 
-
-  const [posts, setPosts] = useState([])
-
+  // const [posts, setPosts] = useState([])
+  
+  const [getPosts, { data, isError, isSuccess }] = useLazyGetPostsQuery()
 
   useEffect(() => {
-
     getPosts()
-  }, [])
+  }, [getPosts])
 
-  const getPosts = () => {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(res => res.json())
-      .then(res => setPosts(res))
-  }
+
+  // const getPosts = () => {
+  //   fetch('https://jsonplaceholder.typicode.com/posts')
+  //     .then(res => res.json())
+  //     .then(res => setPosts(res))
+  // }
 
 
   const user = {
@@ -34,14 +36,14 @@ function App() {
 
     <Routes>
       <Route path='/*' element={isAdmin(<PageLayout />)} >
-        <Route index element={<HomeCompnonent posts={posts} />} />
+        <Route index element={<HomeCompnonent posts={data || []} />} />
         <Route path='info' element={<InfoPage />} />
         <Route path='user' element={<>user</>} />
         <Route path='*' />
       </Route>
 
       <Route path='/auth/'  >
-        <Route index element={<HomeCompnonent posts={posts} />} />
+        <Route index element={<HomeCompnonent posts={data || []} />} />
         <Route path='login' element={<InfoPage />} />
         <Route path='resetpassword' element={<>user</>} />
       </Route>

@@ -10,6 +10,8 @@ import { Layout, Menu } from 'antd'
 
 
 import classes from './Layout.module.css'
+import {useDispatch, useSelector} from "react-redux";
+import {resetCouter, setCouter} from "../../store/reducer/CounterSlice/counterSlice";
 
 export const PageLayout = ({ children }) => {
 
@@ -54,6 +56,9 @@ export const PageLayout = ({ children }) => {
     { id: 4, label: 'Вход/Регистрация', key: 4, link: '/auth' },
   ]
 
+  const dispatch = useDispatch()
+  const { value } = useSelector((state) => state.counterReducer)
+
   const handleNavigate = (key) => {
     let link = menuItems.find((item) => item.key == key)
 
@@ -61,6 +66,17 @@ export const PageLayout = ({ children }) => {
       navigate(link.link)
     }
   }
+
+  const incrementStoreValue = (newValue ) => {
+    dispatch(setCouter( { value: newValue} ))
+  }
+
+  useEffect(() => {
+
+    return (() => {
+      dispatch(resetCouter() )
+    })
+  }, []);
 
   return (
 
@@ -75,6 +91,9 @@ export const PageLayout = ({ children }) => {
           onClick={({ key }) => handleNavigate(key)}
         />
       </Header>
+      <div>
+        <p><button>-</button>  Value : {value} <button onClick={() => incrementStoreValue(value+1)}>+</button></p>
+      </div>
       <Content>
 
         <Layout>
