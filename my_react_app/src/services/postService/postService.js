@@ -6,32 +6,13 @@ export const postService = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com' }),
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: (name) => `/posts`,
+      query: (params) => ({
+        url: `/posts`,
+        method: 'GET',
+        params: { ...params }
+      }),
     }),
   }),
 })
 
 export const { useLazyGetPostsQuery, useGetPostsQuery } = postService
-
-// export const postService = createApi({
-//   reducerPath: 'postService',
-//   baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com' }),
-//   tagTypes: ['posts'],
-//   endpoints: (builder) => ({
-//     getPosts: builder.query({
-//       query: (arg) => ({
-//         url: '/posts',
-//         method: 'GET',
-//         // params: { limit: 5 }
-//       }),
-//       providesTags: ['posts']
-//     })
-//   })
-// })
-
-// export const {
-//   useLazyGetPostsQuery,
-//   useGetPostsQuery,
-
-
-// } = postService;

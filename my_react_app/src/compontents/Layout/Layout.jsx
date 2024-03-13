@@ -1,15 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// import { Header } from '../Header/Header'
-// import { Footer } from '../Footer/Footer'
-import { useCustomHook } from '../../hooks/myCustomHook'
+import React, {  useEffect, useRef, useState } from 'react'
 
-import './Layout.css'
+
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Layout, Menu } from 'antd'
 
-
 import classes from './Layout.module.css'
+
 import {useDispatch, useSelector} from "react-redux";
 import {resetCouter, setCouter} from "../../store/reducer/CounterSlice/counterSlice";
 
@@ -81,29 +78,17 @@ export const PageLayout = ({ children }) => {
   return (
 
     <Layout>
-      <Header style={{ display: 'flex', alignItems: 'center' }}>
-
-        <Menu
-          items={menuItems}
-          theme='dark'
-          mode='horizontal'
-          defaultSelectedKeys={['1']}
-          onClick={({ key }) => handleNavigate(key)}
-        />
-      </Header>
-      <div>
-        <p><button>-</button>  Value : {value} <button onClick={() => incrementStoreValue(value+1)}>+</button></p>
-      </div>
-      <Content>
-
+      {/* <Content> */}
         <Layout>
           <Sider theme='light'><Menu items={menuItems}/></Sider>
-          <Content style={{ height: '100vh', overflowY: 'auto', margin: '0 auto'}}>
+          <Content style={{ height: '98vh', overflowY: 'auto', margin: '0 auto'}}>
             <Outlet />
           </Content>
+          <div style={{ width: '430px', border: '1px solid'}}>
+            right panel
+          </div>
         </Layout>
-      </Content>
-      <Footer></Footer>
+      {/* </Content> */}
     </Layout>
   )
 }
