@@ -1,94 +1,41 @@
-import React, {  useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 
 import { Outlet, useNavigate } from 'react-router-dom'
 
-import { Layout, Menu } from 'antd'
+import { Layout } from 'antd'
 
-import classes from './Layout.module.css'
+import classes from './Layout.module.scss'
 
-import {useDispatch, useSelector} from "react-redux";
-import {resetCouter, setCouter} from "../../store/reducer/CounterSlice/counterSlice";
+import { IoGrid, IoPerson, IoReader, IoSettings } from 'react-icons/io5';
+import { GrTask } from 'react-icons/gr';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import RightSidebar from '../RightSidebar/RightSidebar';
+import NavigationSidebar from '../NavigationSidebar/NavigationSidebar';
 
 export const PageLayout = ({ children }) => {
 
 
-  const navigate = useNavigate()
-  const [number, setNumber] = useState(0)
   const { Header, Content, Footer, Sider } = Layout;
-  // custom hook
-  // const value = useCustomHook('change value to custom hook')
 
+  
 
-  // console.log("🚀 ~ Layout ~ value:", value)
-
-  // useEffect(() => {
-  //   alert('Component mount')
-  // }, [number])
-
-
-  const increment = () => {
-    // let _number = number
-    setNumber(number + 1)
-  }
-
-
-  // useMemo 
-  // useCallback 
-
-  // const memoMethod = useMemo(() => {
-  //   return 'any value'
-  // })
-
-  // const callbackMethod = useCallback(() => {
-  //   return 'any value'
-  // })
-
-  const textareaRef = useRef()
-
-  const menuItems = [
-    { id: 1, label: 'Главная', key: 1, link: '/' },
-    { id: 2, label: 'Инфо', key: 2, link: '/info' },
-    { id: 3, label: 'Пользователь', key: 3, link: '/user' },
-    { id: 4, label: 'Вход/Регистрация', key: 4, link: '/auth' },
-  ]
-
-  const dispatch = useDispatch()
-  const { value } = useSelector((state) => state.counterReducer)
-
-  const handleNavigate = (key) => {
-    let link = menuItems.find((item) => item.key == key)
-
-    if (link) {
-      navigate(link.link)
-    }
-  }
-
-  const incrementStoreValue = (newValue ) => {
-    dispatch(setCouter( { value: newValue} ))
-  }
-
-  useEffect(() => {
-
-    return (() => {
-      dispatch(resetCouter() )
-    })
-  }, []);
 
   return (
 
     <Layout>
       {/* <Content> */}
-        <Layout>
-          <Sider theme='light'><Menu items={menuItems}/></Sider>
-          <Content style={{ height: '98vh', overflowY: 'auto', margin: '0 auto'}}>
-            <Outlet />
-          </Content>
-          <div style={{ width: '430px', border: '1px solid'}}>
-            right panel
-          </div>
-        </Layout>
-      {/* </Content> */}
+      <Layout className={classes.layout_container} style={{ height: '100vh' }} >
+        {/* <Sider theme='light' style={{ background: 'var(--primary-color)' }}> */}
+        <NavigationSidebar />
+        {/* </Sider> */}
+        <Content className={classes.container} style={{ background: '#fff', borderRadius: '20px 0px 0px 20px', overflowY: 'auto', margin: '5px 0px' }}>
+          <Outlet />
+        </Content>
+
+        <RightSidebar />
+      </Layout>
+
     </Layout>
   )
 }
