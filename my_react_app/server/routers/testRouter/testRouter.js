@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt'
 
 const router = express.Router()
 
-
 const testMiddleware = (req, res, next) => {
   let { id } = req.params
 
