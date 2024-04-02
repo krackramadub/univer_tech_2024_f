@@ -91,6 +91,7 @@ router.post('/parse', async (req, res) => {
         _t.push(current_time)
 
       })
+      
 
       columns.map((column) => {
         let current_column = cheerio.load(columns[column])
@@ -98,42 +99,47 @@ router.post('/parse', async (req, res) => {
           dayName = current_column('b').text()
 
           if (weekNumber in main_) {
+            
             main_[weekNumber] = {
               ...main_[weekNumber],
               [dayName]: {
                 ...main_[weekNumber][dayName]
               }
             }
-
-            // main_[weekNumber] = {
-            //   ...main_[weekNumber],
-            //   day: dayName,
-            //   info: {
-            //     ...main_[weekNumber]['info']['l']
-            //   }
-            // }
           } else {
             main_[weekNumber] = {
               [dayName]: {}
             }
           }
         } else {
+          let nameWithHtml = current_column('div').html()
 
-          _l.push(current_column('div').text())
+          let nameWithHtmlSplited = nameWithHtml && nameWithHtml.split('<br>') || []
+
+          let lectureInfo = {
+            name: nameWithHtmlSplited.length == 4 ? nameWithHtmlSplited[0] + nameWithHtmlSplited[1] : nameWithHtmlSplited[0] || '',
+            teacher: nameWithHtmlSplited.length == 4 ? nameWithHtmlSplited[2] : nameWithHtmlSplited[1]  || '',
+            classroom: nameWithHtmlSplited.length == 4 ? nameWithHtmlSplited[3] : nameWithHtmlSplited[2]  || ''
+          }
+          _l.push(lectureInfo)
 
         }
+
       })
 
       main_[weekNumber] = {
         ...main_[weekNumber],
+        weekNumber,
         [dayName]: 
         // {
-          _t.map((time_map, index) => {
+        // lectures: 
+        _t.map((time_map, index) => {
             return {
               time: time_map,
-              name: _l[index]
+              lecture: _l[index]
             }
           }),
+        // }
         // }
       }
     })
