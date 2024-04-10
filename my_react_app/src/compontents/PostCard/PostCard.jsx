@@ -8,7 +8,6 @@ import { FaClock } from 'react-icons/fa'
 const { Title, Text, Paragraph } = Typography;
 
 export const PostCard = ({ postData }) => {
-  console.log("🚀 ~ PostCard ~ postData:", postData)
 
   const [isReadMoreText, setIsReadMoreText] = useState(false)
   useEffect(() => {
