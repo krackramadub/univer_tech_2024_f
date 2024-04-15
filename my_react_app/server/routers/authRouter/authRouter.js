@@ -12,6 +12,7 @@ router.post('/reg', async (req, res) => {
 
   try {
 
+    prisma.$connect()
     let alreadyCreatedUser = await prisma.user.findUnique(({
       where: {
         email: email
@@ -32,6 +33,8 @@ router.post('/reg', async (req, res) => {
       }
     })
 
+    prisma.$disconnect()
+
     res.json({ ok: true, result: user })
 
   } catch (error) {
@@ -45,6 +48,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body
 
   try {
+    prisma.$connect()
     let candidate = await prisma.user.findUnique(({
       where: {
         email: email
@@ -62,8 +66,10 @@ router.post('/login', async (req, res) => {
     delete _user.password
 
     let token = jwt.sign(_user, 'MY_SECRET_KEY', { expiresIn: '1d' })
-    res.json({ ok: true, user: _user, token })
+    prisma.$disconnect()
+    return res.json({ ok: true, user: _user, token })
 
+   
 
   } catch (error) {
     res.status(500).json({ ok: false, result: undefined, errMsg: error })

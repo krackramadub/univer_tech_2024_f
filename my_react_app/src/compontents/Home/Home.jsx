@@ -26,7 +26,6 @@ export const Home = () => {
 
 
   const [weekFilter, setWeekFilter] = useState(null)
-  console.log("🚀 ~ Home ~ weekFilter:", weekFilter)
   const [timeFilter, setTimeFilter] = useState(null)
   const [teacherFilter, setTeacherFilter] = useState(null)
 

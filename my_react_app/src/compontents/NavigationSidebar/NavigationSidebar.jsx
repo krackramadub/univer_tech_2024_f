@@ -24,7 +24,7 @@ const NavigationSidebar = () => {
   ]
 
   return (
-    <div className={classes.sidebar} style={{ width: `${collapseMenu ? '80px' : '250px'}` }}>
+    <div className={classes.sidebar} style={{ minWidth: `${collapseMenu ? '80px' : '250px'}`, maxWidth: `${collapseMenu ? '80px' : '250px'}` }}>
           <div>
             <div style={{ marginLeft: '25px', }}>
               <Button type='text' style={{ color: '#fff' }}
