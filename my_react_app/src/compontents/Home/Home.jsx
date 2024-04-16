@@ -5,17 +5,23 @@ import { useLazyGetAllPostsQuery } from '../../services/postService/postService'
 import { Typography, Result, Select } from 'antd'
 import { FaRegFaceSmileWink } from 'react-icons/fa6'
 import { getFilterStructure } from '../../services/service'
+import { useDispatch } from 'react-redux'
+import { setPosts } from '../../store/reducer/postSlice/postSlice'
 
 const { Title } = Typography;
 
 export const Home = () => {
 
 
+  const dispatch = useDispatch()
   const [getPosts, { data: posts, isError, isSuccess, isLoading, error }] = useLazyGetAllPostsQuery()
-  // console.log("🚀 ~ Home ~ posts:", posts.result)
 
   useEffect(() => {
-    getPosts()
+    getPosts().unwrap().then( res => {
+      if (res.ok) {
+        dispatch(setPosts({posts: res.result}))
+      }
+    })
   }, [getPosts])
 
 
@@ -123,7 +129,6 @@ export const Home = () => {
 
                       if (currentWeekDataByDay.every(dt => !dt.lecture.name || !dt.lecture?.classroom || !dt?.lecture?.teacher)) return
 
-                      console.log("🚀 ~ {Object.keys ~ currentWeekDataByDay:", currentWeekDataByDay, currentWeekDataByDay.length)
                       if (currentWeekDataByDay.length === 0) return
 
                       return (

@@ -1,20 +1,47 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout, Menu, Button, Calendar, Typography, Space, Avatar, Badge, Select, Row, Col } from 'antd'
 import { IoPerson } from 'react-icons/io5';
 import localeRu from './calendareLocaleRu';
+import { useSelector } from 'react-redux';
+
+import { faker } from '@faker-js/faker';
+import { useLazyUploadAvatarQuery } from '../../services/userService/userService';
 
 const { Title, Text } = Typography;
 
 const RightSidebar = () => {
 
 
-  const usersOnline = [
-    { id: Math.ceil(Math.random() * 10000), name: 'Maren Maureen', avatar: '' },
-    { id: Math.ceil(Math.random() * 10000), name: 'Test user 2', avatar: '' },
-    { id: Math.ceil(Math.random() * 10000), name: 'Test user 3', avatar: '' },
-    { id: Math.ceil(Math.random() * 10000), name: 'Test user 4', avatar: '' },
-  ]
+  const { posts } = useSelector((state) => state.postReducer)
 
+  const user = JSON.parse(localStorage.getItem('user'))
+
+  const createRandomUser = () => {
+    return {
+      id: faker.string.uuid(),
+      name: faker.internet.userName(),
+      email: faker.internet.email(),
+      avatar: faker.image.avatar(),
+      number: faker.number.int()
+    };
+  }
+
+  const [avatar, setAvatarFile] = useState()
+
+  const [uploadAvatar] = useLazyUploadAvatarQuery()
+
+  const sendUploadAvatar = () => {
+    let formData = new FormData()
+
+    formData.append('file', avatar[0])
+    formData.append('user', JSON.stringify(user))
+    uploadAvatar(formData)
+
+  }
+
+  const mock_users = faker.helpers.multiple(createRandomUser, {
+    count: 5,
+  });
   return (
     <div style={{
       padding: '40px',
@@ -24,17 +51,43 @@ const RightSidebar = () => {
       background: 'var(--rightside-background-color)',
       overflowY: 'auto',
     }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '24px', justifyContent: 'end' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography.Text level={4} style={{ marginBottom: 0, lineHeight: 1, fontWeight: 600, fontSize: 18 }}>{user.name}</Typography.Text>
+          <Typography.Text>{user.email}</Typography.Text>
+        </div>
+        <div>
+          <label htmlFor='upload_avatar'>
+            <Avatar size={42} src={`http://127.0.0.1:3555/uploads/${user.avatar}`}></Avatar>
+            <input name='upload_avatar' id='upload_avatar' hidden type='file' onChange={(el) => setAvatarFile(el.target.files)} placeholder={'Upload'} />
+          </label>
+          {avatar && avatar.length > 0 && <Button onClick={() => sendUploadAvatar()}>Upload</Button>}
+        </div>
+      </div>
       <div>
         <Title level={3} style={{ color: 'var(--primary-color)', fontWeight: '800' }}>{`${new Date().getDate()}, ${new Date().getFullYear()} `}</Title>
         <Calendar
           fullscreen={false}
           mode='month'
-          // locale={localeRu}
           cellRender={(value) => {
-            if ([10, 25, 1, 28, 29].includes(value.date())) {
+
+            let dates = []
+            for (let obj of posts) {
+              for (let key in obj) {
+                for (let day in obj[key]) {
+                  if (obj[key][day].length > 0) {
+                    dates.push(day.split(',')[1])
+                  }
+                }
+              }
+            }
+
+            if (dates.includes(value.format('DD.MM.YYYY'))) {
               return (
                 <Badge status={'success'} text={''} />
               )
+            } else {
+              return (<Badge />)
             }
           }}
           headerRender={({ value, type, onChange, onTypeChange }) => {
@@ -91,12 +144,12 @@ const RightSidebar = () => {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {usersOnline.map((user, index) => {
+          {mock_users.map((user, index) => {
             return <div style={{ display: 'flex', gap: '6px' }}>
-              <Avatar size={50} icon={<IoPerson />} />
+              <Avatar size={50} icon={<IoPerson />} src={user.avatar} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <Text style={{ fontSize: '18px' }}>{user.name}</Text>
-                <Text>{user.id}</Text>
+                <Text>{user.number}</Text>
               </div>
             </div>
           })}

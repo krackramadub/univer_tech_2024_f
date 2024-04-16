@@ -1,6 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client'
 import { parseLecture } from '../../services/postParseUtils.js';
+import { authCheckMiddleware } from '../middleware/authMiddleware.js';
 
 
 const router = express.Router()
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/parse', async (req, res) => {
+router.post('/parse', authCheckMiddleware, async (req, res) => {
   const { url } = req.body
 
   let lectures = await parseLecture(url)

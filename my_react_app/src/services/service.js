@@ -5,7 +5,6 @@ export const getFilterStructure = (data) => {
   let teachers = []
   
   if (!data) return { time, weekNumbers, teachers}
-  console.log("🚀 ~ getFilterStructure ~ data:", data)
   
   for (let k of data ) {
     weekNumbers.push(...Object.keys(k))
